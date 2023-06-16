@@ -10,7 +10,6 @@ import { CurrentUserContext } from '../context/CurrentUserContext';
 import { EditProfilePopup } from './EditProfilePopup';
 import { EditAvatarPopup } from './EditAvatarPopup';
 import { AddPlacePopup } from './AddPlacePopup';
-import { Route, Routes, useNavigate } from 'react-router-dom';
 
 function App() {
 
@@ -113,18 +112,16 @@ function App() {
       <div className="body__mainframe">
         <CurrentUserContext.Provider value={currentUser}>
           <Header />
-          <Routes>
-            <Main
-              cards={cards}
-              onEditProfile={handleEditProfileClick}
-              onAddPlace={handleAddPlaceClick}
-              onEditAvatar={handleEditAvatarClick}
-              onCardClick={handleCardClick}
-              onCardLike={handleCardLike}
-              onCardDelete={handleCardDelete}
-            />
-            <Footer />
-          </Routes>
+          <Main
+            cards={cards}
+            onEditProfile={handleEditProfileClick}
+            onAddPlace={handleAddPlaceClick}
+            onEditAvatar={handleEditAvatarClick}
+            onCardClick={handleCardClick}
+            onCardLike={handleCardLike}
+            onCardDelete={handleCardDelete}
+          />
+          <Footer />
           <EditAvatarPopup
             isOpen={isEditAvatarPopupOpen}
             onClose={closeAllPopups}
