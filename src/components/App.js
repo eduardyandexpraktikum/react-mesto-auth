@@ -10,6 +10,10 @@ import { CurrentUserContext } from '../context/CurrentUserContext';
 import { EditProfilePopup } from './EditProfilePopup';
 import { EditAvatarPopup } from './EditAvatarPopup';
 import { AddPlacePopup } from './AddPlacePopup';
+import { Route, Routes, useNavigate } from 'react-router'
+import { Login } from './Login';
+import { Register } from './Register';
+import { ProtectedRoute } from './ProtectedRoute';
 
 function App() {
 
@@ -19,6 +23,7 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   const closeAllPopups = () => {
     setIsEditProfilePopupOpen(false);
@@ -91,6 +96,18 @@ function App() {
       .catch((err) => { console.log(err) });
   }
 
+  function handleLogin() {
+
+  }
+
+  function handleRegister() {
+
+  }
+
+  function isTooltipPopupOpen() {
+
+  }
+
   useEffect(() => {
     api.getUserInfo()
       .then((data) => {
@@ -112,16 +129,40 @@ function App() {
       <div className="body__mainframe">
         <CurrentUserContext.Provider value={currentUser}>
           <Header />
-          <Main
-            cards={cards}
-            onEditProfile={handleEditProfileClick}
-            onAddPlace={handleAddPlaceClick}
-            onEditAvatar={handleEditAvatarClick}
-            onCardClick={handleCardClick}
-            onCardLike={handleCardLike}
-            onCardDelete={handleCardDelete}
-          />
-          <Footer />
+          <Routes>
+            <Route
+              path={'/'}
+              element={<>
+                <ProtectedRoute
+                  element={Main}
+                  loggedIn={loggedIn}
+                  cards={cards}
+                  onEditProfile={handleEditProfileClick}
+                  onAddPlace={handleAddPlaceClick}
+                  onEditAvatar={handleEditAvatarClick}
+                  onCardClick={handleCardClick}
+                  onCardLike={handleCardLike}
+                  onCardDelete={handleCardDelete}
+                />
+                <Footer />
+              </>
+              }
+            />
+            <Route
+              path={'/sign-in'}
+              element={<Login
+                onSubmit={handleLogin}
+              />}
+            />
+            <Route
+              path={'/sign-up'}
+              element={<Register
+                isOpen={isTooltipPopupOpen}
+                onClose={closeAllPopups}
+                onSubmit={handleRegister}
+              />}
+            />
+          </Routes>
           <EditAvatarPopup
             isOpen={isEditAvatarPopupOpen}
             onClose={closeAllPopups}
