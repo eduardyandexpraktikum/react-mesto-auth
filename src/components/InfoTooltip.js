@@ -1,11 +1,11 @@
-export function InfoTooltip({ isOpen, onClose, access }) {
+export function InfoTooltip({ isOpen, onClose, successReg }) {
 
     return (
-        <div className="popup popup_opened">
+        <div className={`popup popup_opened ${isOpen && 'popup_opened'}`}>
             <div className="popup__container">
-                <div className="popup__tooltip_pic" />
-                <p className="popup__tooltip_description">Вы успешно зарегистрировались!</p>
-                <button className="popup__close" />
+                <div className={successReg ? "popup__tooltip_pic_success" : "popup__tooltip_pic_fail"} />
+                <p className="popup__tooltip_description">{successReg ? 'Вы успешно зарегистрировались!' : 'Что-то пошло не так! Попробуйте ещё раз.'}</p>
+                <button className="popup__close" onClick={onClose} />
             </div>
         </div>
     )

@@ -14,21 +14,42 @@ import { Route, Routes, useNavigate } from 'react-router'
 import { Login } from './Login';
 import { Register } from './Register';
 import { ProtectedRoute } from './ProtectedRoute';
+import { InfoTooltip } from './InfoTooltip';
+import { checkToken } from '../utils/Auth';
 
 function App() {
 
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [isTooltipPopupOpen, setIsTooltipPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [successReg, setSuccessReg] = useState(false)
+  const [headerEmail, setHeaderEmail] = useState('');
+
+  const navigate = useNavigate();
+
+  const tokenCheck = () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      checkToken(token)
+        .then((user) => {
+          handleLogin(user);
+          setLoggedIn(true);
+          navigate('/');
+        })
+        .catch(console.log)
+    }
+  }
 
   const closeAllPopups = () => {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
+    setIsTooltipPopupOpen(false);
     setSelectedCard({});
   }
 
@@ -42,6 +63,10 @@ function App() {
 
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(true);
+  }
+
+  const handleInfoTooltipIsOpen = () => {
+    setIsTooltipPopupOpen(true);
   }
 
   function handleCardClick(card) {
@@ -96,17 +121,24 @@ function App() {
       .catch((err) => { console.log(err) });
   }
 
-  function handleLogin() {
-
+  function handleLogin(user) {
+    setLoggedIn(true);
+    setHeaderEmail(user.data.email);
   }
 
   function handleRegister() {
 
   }
 
-  function isTooltipPopupOpen() {
-
+  function signOut() {
+    localStorage.removeItem('token')
+    navigate('./sign-in')
+    setLoggedIn(false)
   }
+
+  useEffect(() => {
+    tokenCheck();
+  }, [loggedIn])
 
   useEffect(() => {
     api.getUserInfo()
@@ -128,7 +160,11 @@ function App() {
     <div className='body'>
       <div className="body__mainframe">
         <CurrentUserContext.Provider value={currentUser}>
-          <Header />
+          <Header
+            headerEmail={headerEmail}
+            loggedIn={loggedIn}
+            signOut={signOut}
+          />
           <Routes>
             <Route
               path={'/'}
@@ -150,19 +186,25 @@ function App() {
             />
             <Route
               path={'/sign-in'}
-              element={<Login
-                onSubmit={handleLogin}
-              />}
+              element={
+                <Login
+                  onSubmit={handleLogin}
+                  handleLogin={handleLogin}
+                />
+              }
             />
             <Route
               path={'/sign-up'}
-              element={<Register
-                isOpen={isTooltipPopupOpen}
-                onClose={closeAllPopups}
-                onSubmit={handleRegister}
-              />}
+              element={
+                <Register />
+              }
             />
           </Routes>
+          <InfoTooltip
+            isOpen={handleInfoTooltipIsOpen}
+            onClose={closeAllPopups}
+            successReg={successReg}
+          />
           <EditAvatarPopup
             isOpen={isEditAvatarPopupOpen}
             onClose={closeAllPopups}
