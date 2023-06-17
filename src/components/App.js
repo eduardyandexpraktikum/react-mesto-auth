@@ -150,16 +150,8 @@ function App() {
           handleLogin(data);
         }
       })
-      .catch((data) => {
-        if (data.token) {
-          setSuccessReg(false);
-          // console.log(data.token);
-          // console.log(successReg);
-          setIsTooltipPopupOpen(true);
-        }
-      })
-      .finally(() => {
-        navigate('/');
+      .catch((err) => {
+        console.log(err)
       })
   }
 
