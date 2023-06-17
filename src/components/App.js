@@ -12,7 +12,7 @@ import { EditAvatarPopup } from './EditAvatarPopup';
 import { AddPlacePopup } from './AddPlacePopup';
 import { Route, Routes, useNavigate } from 'react-router'
 import { Login } from './Login';
-import { Register, values } from './Register';
+import { Register } from './Register';
 import { ProtectedRoute } from './ProtectedRoute';
 import { InfoTooltip } from './InfoTooltip';
 import { checkToken, register } from '../utils/Auth';
@@ -63,10 +63,6 @@ function App() {
 
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(true);
-  }
-
-  const handleInfoTooltipIsOpen = () => {
-    setIsTooltipPopupOpen(true);
   }
 
   function handleCardClick(card) {

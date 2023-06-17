@@ -1,7 +1,4 @@
 import { useState } from "react";
-import { register } from '../utils/Auth';
-import { useNavigate } from 'react-router-dom';
-import { InfoTooltip } from "./InfoTooltip";
 
 
 export function Register({ onSubmit }) {
