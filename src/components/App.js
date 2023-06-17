@@ -15,7 +15,7 @@ import { Login } from './Login';
 import { Register } from './Register';
 import { ProtectedRoute } from './ProtectedRoute';
 import { InfoTooltip } from './InfoTooltip';
-import { checkToken, register } from '../utils/Auth';
+import { checkToken, register, login } from '../utils/Auth';
 
 function App() {
 
@@ -130,16 +130,36 @@ function App() {
           setSuccessReg(true);
           setIsTooltipPopupOpen(true)
         };
-        if (!data) {
-          setSuccessReg(false);
-          setIsTooltipPopupOpen(true)
-        };
       })
-      .catch(err => console.log(err))
+      .catch(() => {
+        setSuccessReg(false);
+        setIsTooltipPopupOpen(true);
+      })
       .finally(() => {
         if (setSuccessReg) {
           navigate('/sign-in');
         }
+      })
+  }
+
+  function handleAuth(values) {
+    login(values)
+      .then((data) => {
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+          handleLogin(data);
+        }
+      })
+      .catch((data) => {
+        if (data.token) {
+          setSuccessReg(false);
+          // console.log(data.token);
+          // console.log(successReg);
+          setIsTooltipPopupOpen(true);
+        }
+      })
+      .finally(() => {
+        navigate('/');
       })
   }
 
@@ -201,7 +221,7 @@ function App() {
               path={'/sign-in'}
               element={
                 <Login
-                  handleLogin={handleLogin}
+                  onSubmit={handleAuth}
                 />
               }
             />

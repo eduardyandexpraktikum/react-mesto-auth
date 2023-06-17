@@ -1,28 +1,16 @@
 import { useState } from "react";
-import { login } from '../utils/Auth';
-import { useNavigate } from 'react-router-dom';
 
 
-export function Login({ handleLogin }) {
+export function Login({ onSubmit }) {
 
     const [formValue, setFormValue] = useState({
         email: '',
         password: '',
     })
 
-    const navigate = useNavigate();
-
     const handleSubmit = (e) => {
         e.preventDefault()
-        login(formValue)
-            .then((data) => {
-                if (data.token) {
-                    localStorage.setItem('token', data.token);
-                    handleLogin(data);
-                    navigate('/')
-                }
-            })
-            .catch(err => console.log(err))
+        onSubmit(formValue)
     }
 
     function handleChange(e) {
