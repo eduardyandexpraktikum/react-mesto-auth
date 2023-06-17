@@ -4,24 +4,16 @@ import { useNavigate } from 'react-router-dom';
 import { InfoTooltip } from "./InfoTooltip";
 
 
-export function Register() {
+export function Register({ onSubmit }) {
 
     const [formValue, setFormValue] = useState({
         email: '',
         password: '',
     })
 
-    const navigate = useNavigate();
-
-    function handleSubmit(e) {
+    const handleSubmit = (e) => {
         e.preventDefault()
-        register(formValue)
-            .then((data) => {
-                if (data) {
-                    navigate('/sign-in');
-                }
-            })
-            .catch(err => console.log(err))
+        onSubmit(formValue)
     }
 
     function handleChange(e) {

@@ -12,10 +12,10 @@ import { EditAvatarPopup } from './EditAvatarPopup';
 import { AddPlacePopup } from './AddPlacePopup';
 import { Route, Routes, useNavigate } from 'react-router'
 import { Login } from './Login';
-import { Register } from './Register';
+import { Register, values } from './Register';
 import { ProtectedRoute } from './ProtectedRoute';
 import { InfoTooltip } from './InfoTooltip';
-import { checkToken } from '../utils/Auth';
+import { checkToken, register } from '../utils/Auth';
 
 function App() {
 
@@ -27,7 +27,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [successReg, setSuccessReg] = useState(false)
+  const [successReg, setSuccessReg] = useState(false);
   const [headerEmail, setHeaderEmail] = useState('');
 
   const navigate = useNavigate();
@@ -126,8 +126,25 @@ function App() {
     setHeaderEmail(user.data.email);
   }
 
-  function handleRegister() {
-
+  function handleRegister(values) {
+    register(values)
+      .then((data) => {
+        console.log(data)
+        if (data) {
+          setSuccessReg(true);
+          setIsTooltipPopupOpen(true)
+        };
+        if (!data) {
+          setSuccessReg(false);
+          setIsTooltipPopupOpen(true)
+        };
+      })
+      .catch(err => console.log(err))
+      .finally(() => {
+        if (setSuccessReg) {
+          navigate('/sign-in');
+        }
+      })
   }
 
   function signOut() {
@@ -188,7 +205,6 @@ function App() {
               path={'/sign-in'}
               element={
                 <Login
-                  onSubmit={handleLogin}
                   handleLogin={handleLogin}
                 />
               }
@@ -196,12 +212,13 @@ function App() {
             <Route
               path={'/sign-up'}
               element={
-                <Register />
+                <Register
+                  onSubmit={handleRegister} />
               }
             />
           </Routes>
           <InfoTooltip
-            isOpen={handleInfoTooltipIsOpen}
+            isOpen={isTooltipPopupOpen}
             onClose={closeAllPopups}
             successReg={successReg}
           />

@@ -3,7 +3,7 @@ import { login } from '../utils/Auth';
 import { useNavigate } from 'react-router-dom';
 
 
-export function Login({ onSubmit, handleLogin }) {
+export function Login({ handleLogin }) {
 
     const [formValue, setFormValue] = useState({
         email: '',
